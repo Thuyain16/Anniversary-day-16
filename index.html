@@ -1,0 +1,321 @@
+```html
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anniversary Surprise For You ❤️</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti CDN for Fireworks -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Google Fonts (Padauk & Poppins) -->
+    <link href="https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Padauk', 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ffc0cb 0%, #ffe6eb 50%, #ffb6c1 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Floating background hearts animation */
+        .heart-bg {
+            position: fixed;
+            top: -10vh;
+            color: rgba(255, 105, 180, 0.45);
+            animation: floatUp 7s linear infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(110vh) rotate(0deg) scale(0.8);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10vh) rotate(360deg) scale(1.3);
+                opacity: 0;
+            }
+        }
+
+        /* Glassmorphism card style */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(14px);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 20px 45px rgba(255, 105, 180, 0.35);
+        }
+
+        /* Smooth transition for step screens */
+        .step-container {
+            transition: all 0.5s ease-in-out;
+        }
+
+        .btn-dodge {
+            transition: transform 0.2s ease-out;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center p-4 relative min-h-screen">
+
+    <!-- Floating Background Hearts Container -->
+    <div id="hearts-container"></div>
+
+    <!-- Main Card Container -->
+    <main class="glass-card w-full max-w-lg rounded-3xl p-6 md:p-8 text-center relative z-10 my-auto shadow-2xl">
+        
+        <!-- STEP 1 -->
+        <section id="step1" class="step-container flex flex-col items-center justify-center min-h-[380px]">
+            <div class="text-7xl mb-4 animate-bounce">💖</div>
+            <h1 class="text-3xl font-bold text-pink-600 mb-4 leading-relaxed">
+                ချစ်လားဟင်...? 🥺
+            </h1>
+            <p class="text-gray-500 text-sm mb-6">မှန်မှန်ဖြေနော် မမှားစေနဲ့! 👀</p>
+            
+            <div class="flex flex-wrap items-center justify-center gap-4 w-full relative min-h-[120px]" id="step1-btn-container">
+                <button id="step1-yes" onclick="nextStep(2)" class="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition-all duration-300 text-lg">
+                    ချစ်တယ် 😍
+                </button>
+                <button id="step1-no" onclick="handleStep1No()" onmouseover="handleStep1No()" class="bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold py-3 px-6 rounded-full transition-all duration-300">
+                    မချစ်ပါဘူး 😜
+                </button>
+            </div>
+        </section>
+
+        <!-- STEP 2 -->
+        <section id="step2" class="step-container hidden flex-col items-center justify-center min-h-[380px]">
+            <div class="text-7xl mb-4 animate-pulse">🌍✨</div>
+            <h1 class="text-3xl font-bold text-pink-600 mb-4 leading-relaxed">
+                ဘယ်လောက်ထိ ချစ်တာလဲ...? 🥰
+            </h1>
+            <p class="text-gray-500 text-sm mb-6">သေချာ စဉ်းစားပြီး ရွေးနော်...</p>
+
+            <div class="flex flex-wrap items-center justify-center gap-4 w-full relative min-h-[120px]" id="step2-btn-container">
+                <button id="step2-wrong" onmouseover="dodgeButton(this)" onclick="dodgeButton(this)" class="btn-dodge bg-amber-200 text-amber-800 font-semibold py-3 px-6 rounded-full shadow">
+                    မြူမှုန့်လေးလောက် 🏖️
+                </button>
+                <button id="step2-right" onclick="nextStep(3)" class="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition-all duration-300 text-lg">
+                    ကမ္ဘာကြီးတစ်ခုလုံးလောက်🌎❤️
+                </button>
+            </div>
+        </section>
+
+        <!-- STEP 3 -->
+        <section id="step3" class="step-container hidden flex-col items-center justify-center min-h-[380px]">
+            <div class="text-7xl mb-4 animate-bounce">👑✨</div>
+            <h1 class="text-3xl font-bold text-pink-600 mb-4 leading-relaxed">
+                ကိုကိုကငယ်ရဲ့အချစ်ဆုံးလေးလား...? 🥺
+            </h1>
+            <p class="text-gray-500 text-sm mb-6">နောက်ဆုံးမေးခွန်းလေးပါ အသည်းလေး...</p>
+
+            <div class="flex flex-wrap items-center justify-center gap-4 w-full relative min-h-[120px]" id="step3-btn-container">
+                <button id="step3-yes" onclick="triggerFinalStep()" class="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition-all duration-300 text-lg">
+                    ဟုတ်ပါတယ် အချစ်ဆုံးလေးပါ 💖
+                </button>
+                <button id="step3-no" onmouseover="dodgeButton(this)" onclick="dodgeButton(this)" class="btn-dodge bg-gray-300 text-gray-700 font-semibold py-3 px-6 rounded-full">
+                    မဟုတ်ပါဘူးအရှုပ်ထုပ်ရီး 🙈
+                </button>
+            </div>
+        </section>
+
+        <!-- STEP 4: FINAL MESSAGE & PHOTOS -->
+        <section id="step4" class="step-container hidden flex-col items-center justify-center">
+            <div class="text-6xl mb-2 animate-bounce">🎉💌🎉</div>
+            <h1 class="text-3xl font-bold text-pink-600 mb-2">Yayyy! Happy Anniversary! 💕</h1>
+            <p class="text-gray-600 font-semibold text-sm mb-5">ငယ့်ကို အမြဲတမ်း ချစ်တယ်နော် ကိုကိုရဲ့ ကောင်မလေးရေ ✨</p>
+
+            <!-- Photo Gallery with Direct Links -->
+            <div class="grid grid-cols-2 gap-3 mb-6 w-full">
+                <!-- PHOTO 1 -->
+                <div class="overflow-hidden rounded-2xl shadow-md border-2 border-pink-300 aspect-square cursor-pointer transform hover:scale-105 transition duration-300 bg-pink-100 flex items-center justify-center" onclick="zoomImage('https://i.ibb.co/6c122cQL/IMG-20260916-160752-007.jpg')">
+                    <img src="https://i.ibb.co/6c122cQL/IMG-20260916-160752-007.jpg" alt="Photo 1" class="w-full h-full object-cover">
+                </div>
+
+                <!-- PHOTO 2 -->
+                <div class="overflow-hidden rounded-2xl shadow-md border-2 border-pink-300 aspect-square cursor-pointer transform hover:scale-105 transition duration-300 bg-pink-100 flex items-center justify-center" onclick="zoomImage('https://i.ibb.co/nN5C3nVj/IMG-20250410-171343.jpg')">
+                    <img src="https://i.ibb.co/nN5C3nVj/IMG-20250410-171343.jpg" alt="Photo 2" class="w-full h-full object-cover">
+                </div>
+            </div>
+
+            <!-- Romantic Note Box -->
+            <div class="bg-pink-50/90 border border-pink-200 rounded-2xl p-5 text-left shadow-inner text-gray-700 text-sm leading-relaxed mb-6 space-y-3">
+                <p class="font-bold text-pink-600 text-base border-b border-pink-200 pb-2">
+                    💌 ကိုကို့ ရဲ့ ရင်ဖွင့်လွှာ -
+                </p>
+                <p>
+                    ကိုတို့အတူတူ ဖြတ်သန်းလာခဲ့တဲ့ အချိန်တွေမှာ အမြဲတမ်း ပျော်ရွှင်မှုတွေ ပေးခဲ့လို့ ကျေးဇူးအများကြီးတင်ပါတယ်နော်။
+                </p>
+                <p>
+                    ရှေ့ဆက်ပြီးတော့လည်း တစ်ယောက်လက်ကိုတစ်ယောက် ခိုင်ခိုင်မြဲမြဲဆုပ်ကိုင်ထားပြီး အတူတူ လျှောက်လှမ်းသွားကြရအောင်။
+                </p>
+                <p>
+                    ဒီကမ္ဘာပေါ်မှာ လူတွေအများကြီးရှိနေတဲ့အထဲကမှ ကိုယ့်ကို ရွေးချယ်ပေးပြီး ချစ်ပေးနေတဲ့အတွက် အထူးသဖြင့် ကိုယ့်ရဲ့ ပျော်ရွှင်မှုတိုင်းမှာ မင်းအမြဲရှိနေပေးလို့ ကျေးဇူးတင်ပါတယ်။ နောင်လာမယ့် အနာဂတ် အချိန်တွေမှာလည်း အတူတူ ရယ်မောကြမယ်၊ အတူတူ ဖြတ်သန်းကြမယ်နော်။
+                </p>
+                <p>
+                    ကိုယ်တို့ရဲ့ အချစ်ဇာတ်လမ်းလေးက အခုမှ အစပျိုးရုံပဲ ရှိသေးတာပါ။ ကိုကိုရဲ့မကောင်းတဲ့အကျင့်တွေကိုလည်း သည်းခံလာပေးလို့ ကျေးဇူးတင်ပါတယ်။
+                </p>
+                <p class="font-bold text-pink-600 text-center text-base pt-2">
+                    ငယ့်ကို အရမ်းချစ်တယ်နော်အာဘွား 😚💓
+                </p>
+            </div>
+
+            <!-- Fireworks Re-trigger Button & Restart Button -->
+            <div class="flex gap-3 justify-center">
+                <button onclick="launchFireworks()" class="bg-gradient-to-r from-rose-400 to-pink-500 text-white font-bold py-2.5 px-6 rounded-full text-xs shadow-lg hover:opacity-90 transition">
+                    🎆 မီးရှူးမီးပန်း ဖောက်မည်
+                </button>
+                <button onclick="resetApp()" class="bg-pink-100 hover:bg-pink-200 text-pink-700 font-semibold py-2.5 px-5 rounded-full text-xs transition duration-300">
+                    🔄 ပြန်စကြည့်မည်
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal for Zoomed Image -->
+    <div id="image-modal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4 cursor-pointer" onclick="this.classList.add('hidden')">
+        <div class="max-w-full max-h-[85vh] rounded-2xl border-4 border-white shadow-2xl overflow-hidden">
+            <img id="modal-img" src="" alt="Zoomed Photo" class="max-w-full max-h-[80vh] object-contain">
+        </div>
+    </div>
+
+    <script>
+        let step1NoClicks = 0;
+        let step1YesScale = 1;
+
+        // Background floating hearts
+        function createHearts() {
+            const container = document.getElementById('hearts-container');
+            const heartIcons = ['❤️', '💖', '💗', '💓', '💕'];
+            
+            for (let i = 0; i < 25; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart-bg';
+                heart.innerText = heartIcons[Math.floor(Math.random() * heartIcons.length)];
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 4 + 5) + 's';
+                heart.style.animationDelay = (Math.random() * 5) + 's';
+                heart.style.fontSize = (Math.random() * 20 + 18) + 'px';
+                container.appendChild(heart);
+            }
+        }
+
+        // Handle Step 1 Logic (No button makes Yes button bigger)
+        function handleStep1No() {
+            step1NoClicks++;
+            const yesBtn = document.getElementById('step1-yes');
+            const noBtn = document.getElementById('step1-no');
+
+            step1YesScale += 0.4;
+            yesBtn.style.transform = `scale(${step1YesScale})`;
+            
+            const noTexts = [
+                "မရဘူး ချစ်ရမယ်! 😜", 
+                "တကယ် မချစ်ဘူးလား 🥺", 
+                "သေချာစဉ်းစားပါဦး 😭", 
+                "စိတ်ဆိုးလိုက်မှာနော် 💔", 
+                "Yes ကိုပဲ နှိပ်တော့နော်! 💖"
+            ];
+            
+            noBtn.innerText = noTexts[Math.min(step1NoClicks - 1, noTexts.length - 1)];
+
+            const maxX = 80;
+            const maxY = 40;
+            const randomX = (Math.random() - 0.5) * maxX * 2;
+            const randomY = (Math.random() - 0.5) * maxY * 2;
+            noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+        }
+
+        // Button dodging logic for wrong choices
+        function dodgeButton(buttonElement) {
+            const maxX = 120;
+            const maxY = 60;
+            const randomX = (Math.random() - 0.5) * maxX * 2;
+            const randomY = (Math.random() - 0.5) * maxY * 2;
+
+            buttonElement.style.transform = `translate(${randomX}px, ${randomY}px)`;
+        }
+
+        // Transition between Steps
+        function nextStep(stepNumber) {
+            for (let i = 1; i <= 4; i++) {
+                const step = document.getElementById(`step${i}`);
+                step.classList.add('hidden');
+                step.classList.remove('flex');
+            }
+
+            const targetStep = document.getElementById(`step${stepNumber}`);
+            targetStep.classList.remove('hidden');
+            targetStep.classList.add('flex');
+        }
+
+        // Final Step Action with Fireworks
+        function triggerFinalStep() {
+            nextStep(4);
+            launchFireworks();
+        }
+
+        // Fireworks Animation Function
+        function launchFireworks() {
+            if (typeof confetti === 'function') {
+                const duration = 3.5 * 1000;
+                const animationEnd = Date.now() + duration;
+                const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 99 };
+
+                function randomInRange(min, max) {
+                    return Math.random() * (max - min) + min;
+                }
+
+                const interval = setInterval(function() {
+                    const timeLeft = animationEnd - Date.now();
+
+                    if (timeLeft <= 0) {
+                        return clearInterval(interval);
+                    }
+
+                    const particleCount = 50 * (timeLeft / duration);
+                    confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+                    confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+                }, 250);
+            }
+        }
+
+        // Image Zoom Modal Function
+        function zoomImage(src) {
+            const modal = document.getElementById('image-modal');
+            const modalImg = document.getElementById('modal-img');
+            modalImg.src = src;
+            modal.classList.remove('hidden');
+        }
+
+        // Reset App function
+        function resetApp() {
+            step1NoClicks = 0;
+            step1YesScale = 1;
+            
+            const yesBtn = document.getElementById('step1-yes');
+            const noBtn = document.getElementById('step1-no');
+            
+            yesBtn.style.transform = 'scale(1)';
+            noBtn.innerText = 'မချစ်ပါဘူး 😜';
+            noBtn.style.transform = 'translate(0px, 0px)';
+
+            document.querySelectorAll('.btn-dodge').forEach(btn => {
+                btn.style.transform = 'translate(0px, 0px)';
+            });
+
+            nextStep(1);
+        }
+
+        window.onload = function() {
+            createHearts();
+        };
+    </script>
+</body>
+</html>
+```
